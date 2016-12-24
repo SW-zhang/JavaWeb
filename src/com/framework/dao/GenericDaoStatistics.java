@@ -371,7 +371,7 @@ public class GenericDaoStatistics {
         closeIteratorCost.cost(cost);
     }
 
-    // int bulkUpdate(String hql, Object... args);
+    // int updateHql(String hql, Object... args);
     private GenericDaoStatistics.Cost bulkUpdateCost = new Cost();
     private Map<String, GenericDaoStatistics.Cost> bulkUpdate = new HashMap<String, GenericDaoStatistics.Cost>();
 
@@ -385,7 +385,7 @@ public class GenericDaoStatistics {
         classCost.cost(cost);
     }
 
-    // int bulkUpdateSql(final String sql, final Object... args);
+    // int updateSql(final String sql, final Object... args);
     private GenericDaoStatistics.Cost bulkUpdateSqlCost = new Cost();
     private Map<String, GenericDaoStatistics.Cost> bulkUpdateSql = new HashMap<String, GenericDaoStatistics.Cost>();
 
@@ -743,7 +743,7 @@ public class GenericDaoStatistics {
     }
 
     /**
-     * @return the bulkUpdate
+     * @return the updateHql
      */
     public Map<String, GenericDaoStatistics.Cost> getBulkUpdate() {
         return bulkUpdate;
@@ -757,7 +757,7 @@ public class GenericDaoStatistics {
     }
 
     /**
-     * @return the bulkUpdateSql
+     * @return the updateSql
      */
     public Map<String, GenericDaoStatistics.Cost> getBulkUpdateSql() {
         return bulkUpdateSql;

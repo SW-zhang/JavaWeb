@@ -223,17 +223,17 @@ public class GenericDAOHibernateStatics extends GenericDAOHibernate {
     }
 
     @Override
-    public int bulkUpdate(String hql, Object... args) {
+    public int updateHql(String hql, Object... args) {
         long start = System.currentTimeMillis();
-        int result = super.bulkUpdate(hql, args);
+        int result = super.updateHql(hql, args);
         statistics.bulkUpdateCost(hql, System.currentTimeMillis() - start);
         return result;
     }
 
     @Override
-    public int bulkUpdateSql(String sql, Object... args) {
+    public int updateSql(String sql, Object... args) {
         long start = System.currentTimeMillis();
-        int result = super.bulkUpdateSql(sql, args);
+        int result = super.updateSql(sql, args);
         statistics.bulkUpdateSqlCost(sql, System.currentTimeMillis() - start);
         return result;
     }

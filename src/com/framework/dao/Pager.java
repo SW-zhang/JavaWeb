@@ -2,43 +2,41 @@ package com.framework.dao;
 
 import com.framework.dao.query.QueryBuilder;
 
+import java.beans.Transient;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * 分页对象
+ *
+ * @param <T>
+ */
 public class Pager<T extends Serializable> implements Serializable {
 
     private QueryBuilder query;
 
     private List<T> results;
 
-    private int firstResult;
+    private Integer currentPage;
 
-    private int maxResults;
+    private Integer pageSize;
 
-    private long count;
-
-    private String order;
-
-    public String getOrder() {
-        return order;
-    }
-
-    public void setOrder(String order) {
-        this.order = order;
-    }
+    private Integer count;
 
     public Pager() {
+        this.currentPage = 0;
+        this.pageSize = 20;
     }
 
-    public Pager(QueryBuilder query, int firstResult, int maxResult) {
-        this.query = query;
-        this.firstResult = (firstResult - 1) * maxResult;
-        this.maxResults = maxResult;
+    public Pager(int currentPage, int pageSize) {
+        this.currentPage = currentPage;
+        this.pageSize = pageSize;
     }
 
     /**
      * @return the query
      */
+    @Transient
     public QueryBuilder getQuery() {
         return query;
     }
@@ -65,48 +63,51 @@ public class Pager<T extends Serializable> implements Serializable {
     }
 
     /**
-     * @return the firstResult
+     * @return the currentPage
      */
-    public int getFirstResult() {
-        return firstResult;
+    public int getCurrentPage() {
+        return currentPage;
     }
 
     /**
-     * @param firstResult the firstResult to set
+     * @param currentPage the currentPage to set
      */
-    public void setFirstResult(int firstResult) {
-        this.firstResult = firstResult;
+    public void setCurrentPage(int currentPage) {
+        this.currentPage = currentPage;
     }
 
     /**
-     * @return the maxResults
+     * @return the pageSize
      */
-    public int getMaxResults() {
-        return maxResults;
+    public int getPageSize() {
+        return pageSize;
     }
 
     /**
-     * @param maxResults the maxResults to set
+     * @param pageSize the pageSize to set
      */
-    public void setMaxResults(int maxResults) {
-        this.maxResults = maxResults;
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
     }
 
     /**
      * @return the count
      */
-    public long getCount() {
+    public Integer getCount() {
         return count;
     }
 
     /**
      * @param count the count to set
      */
-    public void setCount(long count) {
+    public void setCount(Integer count) {
         this.count = count;
     }
 
-    public String getStatisticsKey() {
-        return query.toString();
+    /**
+     * @return totalPages
+     */
+    public Integer getTotalPages() {
+        return count % pageSize == 0 ? count / pageSize : count / pageSize + 1;
     }
 }

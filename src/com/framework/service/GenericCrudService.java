@@ -2,6 +2,7 @@ package com.framework.service;
 
 import com.framework.bean.BaseEntity;
 import com.framework.dao.Pager;
+import com.framework.dao.Sort;
 import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.orm.hibernate5.HibernateCallback;
 import org.springframework.transaction.annotation.Propagation;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 一般数据库调用操作.
@@ -18,7 +20,7 @@ public interface GenericCrudService {
 
     /**
      * 列表操作.
-     * <p/>
+     * <p>
      * eg: select * from TABLE
      *
      * @param <E>   EntityBean类型泛参
@@ -31,7 +33,7 @@ public interface GenericCrudService {
 
     /**
      * 按ID取数据库条目.
-     * <p/>
+     * <p>
      * eg: select * from TABLE where SimpleLongID = :id
      *
      * @param <E>   EntityBean类型泛参
@@ -55,7 +57,7 @@ public interface GenericCrudService {
 
     /**
      * 保存数据库条目.
-     * <p/>
+     * <p>
      * eg: insert into TABLE (col1,col2,...) values (val1,val2,...)
      *
      * @param <E>    EntityBean类型泛参
@@ -68,7 +70,7 @@ public interface GenericCrudService {
 
     /**
      * 更新数据库条目.
-     * <p/>
+     * <p>
      * eg: update TABLE set (col1=val1,col2=val2....) where SimpleLongID = :entity.id
      * 注意此更新操作为按条目主键更新.
      *
@@ -81,7 +83,7 @@ public interface GenericCrudService {
 
     /**
      * 保存或更新数据库条目.
-     * <p/>
+     * <p>
      * 如果数据库存在此记录id的条目,则进行update操作,否则进行insert.
      *
      * @param <E>    EntityBean类型泛参
@@ -95,7 +97,7 @@ public interface GenericCrudService {
 
     /**
      * 统计数据库表记录数.
-     * <p/>
+     * <p>
      * eg: select count(*) from TABLE
      *
      * @param <E>   EntityBean类型泛参
@@ -107,19 +109,8 @@ public interface GenericCrudService {
     public <E extends BaseEntity<E, ID>, ID extends Serializable> long count(Class<E> clazz);
 
     /**
-     * TODO 详细补齐此操作的DOC文档
-     * TODO 修改此分页操作,hqlQueryBuilder,criteriaBuilder,detachCriteriaBuilder
-     *
-     * @param <T>
-     * @param pager
-     * @return
-     */
-    @Transactional(propagation = Propagation.SUPPORTS)
-    public <T extends Serializable> Pager<T> page(Pager<T> pager);
-
-    /**
      * 数据库HQL查询.
-     * <p/>
+     * <p>
      * eg: hql: from ENTITY where property1 = ? and property2 = ?
      * args: property1 value,property2 value
      *
@@ -142,7 +133,7 @@ public interface GenericCrudService {
 
     /**
      * 数据库原生SQL查询.
-     * <p/>
+     * <p>
      * eg: SQL:select * from TABLE where col1 = ? and col2 = ?
      * args: col1 value, col2 value
      *
@@ -252,8 +243,76 @@ public interface GenericCrudService {
     public void closeIterator(Iterator<?> iterator);
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public int bulkUpdate(String hql, Object... args);
+    public int updateHql(String hql, Object... args);
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public int bulkUpdateSql(final String sql, final Object... args);
+    public int updateSql(final String sql, final Object... args);
+
+
+//    /**
+//     * TODO 详细补齐此操作的DOC文档
+//     * TODO 修改此分页操作,hqlQueryBuilder,criteriaBuilder,detachCriteriaBuilder
+//     *
+//     * @param <T>
+//     * @param pager
+//     * @return
+//     */
+//    @Transactional(propagation = Propagation.SUPPORTS)
+//    public <T extends Serializable> Pager<T> page(Pager<T> pager);
+
+    /**
+     * 分页查询
+     *
+     * @param pager  分页对象
+     * @param clazz  类
+     * @param params 条件
+     * @param <T>
+     */
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public <T extends Serializable> void pager(Class clazz, Pager<T> pager, Map<String, Object> params);
+
+    /**
+     * 分页查询
+     *
+     * @param pager  分页对象
+     * @param clazz  类
+     * @param params 条件
+     * @param orders 排序字段
+     * @param <T>
+     */
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public <T extends Serializable> void pager(Class clazz, Pager<T> pager, Map<String, Object> params, List<Sort> orders);
+
+    /**
+     * 分页查询
+     *
+     * @param pager  分页对象
+     * @param clazz  类
+     * @param orders 排序字段
+     * @param <T>
+     */
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public <T extends Serializable> void pager(Class clazz, Pager<T> pager, List<Sort> orders);
+
+    /**
+     * 分页查询 hql
+     *
+     * @param pager  分页对象
+     * @param hql    hql语句
+     * @param params 参数
+     * @param <T>
+     */
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public <T extends Serializable> void hqlPager(Pager<T> pager, String hql, Object[] params);
+
+    /**
+     * 分页查询  sql
+     *
+     * @param pager  分页对象
+     * @param sql    sql语句
+     * @param params 参数
+     * @param <T>
+     */
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public <T extends Serializable> void sqlPager(Pager<T> pager, String sql, Object[] params);
 }

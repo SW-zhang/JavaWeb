@@ -102,8 +102,8 @@ public abstract class BaseDAOHibernate<E extends BaseEntity<? extends E, K>, K e
             long count = (Long) getHibernateTemplate().find(hqlCount, parameters).get(0);
 
             Query hibernateQuery = currentSession().createQuery(hql);
-            hibernateQuery.setFirstResult(pager.getFirstResult());
-            hibernateQuery.setMaxResults(pager.getMaxResults());
+            hibernateQuery.setFirstResult(pager.getPageSize() * pager.getCurrentPage());
+            hibernateQuery.setMaxResults(pager.getPageSize());
             for (int i = 0; i < parameters.length; i++) {
                 hibernateQuery.setParameter(i, parameters[i]);
             }
@@ -111,7 +111,7 @@ public abstract class BaseDAOHibernate<E extends BaseEntity<? extends E, K>, K e
             List<E> results = hibernateQuery.list();
 
             pager.setResults(results);
-            pager.setCount(count);
+            pager.setCount((int) count);
             return pager;
         } else if (CriteriaQueryBuilder.class.isAssignableFrom(queryBuilder.getClass())) {
             return getHibernateTemplate().execute(new HibernateCallback<Pager<E>>() {
@@ -119,8 +119,8 @@ public abstract class BaseDAOHibernate<E extends BaseEntity<? extends E, K>, K e
                 public Pager<E> doInHibernate(Session session) throws HibernateException {
                     Criteria criteria = ((CriteriaQueryBuilder) queryBuilder).buildCriteria(session);
                     Criteria criteria2 = ((CriteriaQueryBuilder) queryBuilder).buildCriteria(session);
-                    criteria.setFirstResult(pager.getFirstResult());
-                    criteria.setMaxResults(pager.getMaxResults());
+                    criteria.setFirstResult(pager.getPageSize() * pager.getCurrentPage());
+                    criteria.setMaxResults(pager.getPageSize());
                     @SuppressWarnings("unchecked")
                     List<E> results = criteria.list();
 
@@ -128,7 +128,7 @@ public abstract class BaseDAOHibernate<E extends BaseEntity<? extends E, K>, K e
                     long count = (Long) criteria2.uniqueResult();
 
                     pager.setResults(results);
-                    pager.setCount(count);
+                    pager.setCount((int) count);
                     return pager;
                 }
             });

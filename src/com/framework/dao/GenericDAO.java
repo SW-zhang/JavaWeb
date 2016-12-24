@@ -64,8 +64,8 @@ public interface GenericDAO {
 
     public void closeIterator(Iterator<?> iterator);
 
-    public int bulkUpdate(String hql, Object... args);
+    public int updateHql(String hql, Object... args);
 
-    public int bulkUpdateSql(final String sql, final Object... args);
+    public int updateSql(final String sql, final Object... args);
 
 }

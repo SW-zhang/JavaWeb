@@ -238,7 +238,7 @@ public class GenericCrudServiceImpl implements GenericCrudService {
      * 分页查询  sql
      *
      * @param pager  分页对象
-     * @param clazz  分页对象类型
+     * @param clazz  结果对象类型
      * @param sql    sql语句
      * @param params 参数
      */

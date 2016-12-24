@@ -111,10 +111,6 @@ public class GenericDAOHibernate extends HibernateDaoSupport implements GenericD
             @Override
             public List<T> doInHibernate(Session session) throws HibernateException {
                 NativeQuery query = session.createNativeQuery(sql);
-                // 添加要查询字段的标量
-                AddScalar.addSclar(query, expectType);
-                // 转换查询结果为T
-                query.setResultTransformer(Transformers.aliasToBean(expectType));
                 for (int i = 0; i < args.length; i++) {
                     query.setParameter(i + 1, args[i]);
                 }

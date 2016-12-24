@@ -24,8 +24,7 @@ public interface GenericDAO {
 
     public <E extends BaseEntity<E, ID>, ID extends Serializable> long count(Class<E> clazz);
 
-    public <T extends Serializable> Pager<T> page(Pager<T> pager);
-
+    public <T extends Serializable> Pager<T> page(Pager<T> pager, Class<T> clazz);
 
     public List<?> hql(String hql, Object... args);
 

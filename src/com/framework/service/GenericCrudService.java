@@ -315,4 +315,16 @@ public interface GenericCrudService {
      */
     @Transactional(propagation = Propagation.SUPPORTS)
     public <T extends Serializable> void sqlPager(Pager<T> pager, String sql, Object[] params);
+
+    /**
+     * 分页查询  sql
+     *
+     * @param pager  分页对象
+     * @param clazz  分页对象类型
+     * @param sql    sql语句
+     * @param params 参数
+     * @param <T>
+     */
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public <T extends Serializable> void sqlPager(Pager<T> pager, Class<T> clazz, String sql, Object[] params);
 }

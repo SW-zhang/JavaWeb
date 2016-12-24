@@ -10,13 +10,10 @@ import com.framework.dao.query.HqlQueryBuilder.HqlQuery;
 import com.framework.dao.query.QueryBuilder;
 import com.framework.dao.query.SqlQueryBuilder;
 import org.hibernate.Criteria;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Projections;
 import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
-import org.hibernate.transform.Transformers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -27,6 +24,7 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 
+@SuppressWarnings("unchecked")
 public class GenericDAOHibernate extends HibernateDaoSupport implements GenericDAO {
 
     protected final Logger logger = LoggerFactory.getLogger(getClass());
@@ -49,7 +47,6 @@ public class GenericDAOHibernate extends HibernateDaoSupport implements GenericD
         getHibernateTemplate().delete(entity);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public <E extends BaseEntity<E, ID>, ID extends Serializable> ID save(E entity) {
         logger.debug("Saving Entry for Class:{}, Id:{}.", entity.getClass().getName(), entity.getId());
@@ -80,7 +77,6 @@ public class GenericDAOHibernate extends HibernateDaoSupport implements GenericD
         return getHibernateTemplate().find(hql, args);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public <T> List<T> hql(Class<T> expectType, String hql, Object... args) {
         logger.debug("HQL query, expectType:{}, hql:[{}], args count:{}.", expectType.getName(), hql, args.length);
@@ -88,132 +84,107 @@ public class GenericDAOHibernate extends HibernateDaoSupport implements GenericD
     }
 
     @Override
-    public List sql(final String sql, final Object... args) {
+    public List<?> sql(final String sql, final Object... args) {
         logger.debug("SQL query, sql:[{}], args count:{}.", sql, args.length);
-        return getHibernateTemplate().execute(new HibernateCallback<List<?>>() {
-            @Override
-            public List<?> doInHibernate(Session session) throws HibernateException {
-                Query query = session.createNativeQuery(sql);
-
-                for (int i = 0; i < args.length; i++) {
-                    query.setParameter(i + 1, args[i]);
-                }
-                return query.list();
+        return getHibernateTemplate().execute((HibernateCallback<List<?>>) session -> {
+            NativeQuery query = session.createNativeQuery(sql);
+            for (int i = 0; i < args.length; i++) {
+                query.setParameter(i + 1, args[i]);
             }
+            return query.list();
         });
     }
 
     @Override
     public <T> List<T> sql(Class<T> expectType, final String sql, final Object... args) {
         logger.debug("SQL query, expectType:{}, sql:[{}], args count:{}.", expectType.getName(), sql, args.length);
-        return getHibernateTemplate().execute(new HibernateCallback<List<T>>() {
-            @SuppressWarnings("unchecked")
-            @Override
-            public List<T> doInHibernate(Session session) throws HibernateException {
-                NativeQuery query = session.createNativeQuery(sql);
-                for (int i = 0; i < args.length; i++) {
-                    query.setParameter(i + 1, args[i]);
-                }
-                return query.list();
+        return getHibernateTemplate().execute(session -> {
+            NativeQuery<T> query = session.createNativeQuery(sql);
+            for (int i = 0; i < args.length; i++) {
+                query.setParameter(i + 1, args[i]);
             }
+            AddScalar.addScalar(query, expectType);
+            return query.list();
         });
     }
 
     @Override
     public Object uniqueResultSql(final String sql, final Object... args) {
         logger.debug("SQL unique query, sql:[{}], args count:{}.", sql, args.length);
-        return getHibernateTemplate().execute(new HibernateCallback<Object>() {
-            @Override
-            public Object doInHibernate(Session session) throws HibernateException {
-                Query query = session.createNativeQuery(sql);
-                for (int i = 0; i < args.length; i++) {
-                    query.setParameter(i + 1, args[i]);
-                }
-                return query.uniqueResult();
+        return getHibernateTemplate().execute(session -> {
+            NativeQuery query = session.createNativeQuery(sql);
+            for (int i = 0; i < args.length; i++) {
+                query.setParameter(i + 1, args[i]);
             }
+            return query.uniqueResult();
         });
     }
 
     @Override
     public <T> T uniqueResultSql(Class<T> expectType, final String sql, final Object... args) {
         logger.debug("SQL unique query, expectType:{}, sql:[{}], args count:{}.", expectType.getName(), sql, args.length);
-        return getHibernateTemplate().execute(new HibernateCallback<T>() {
-            @SuppressWarnings("unchecked")
-            @Override
-            public T doInHibernate(Session session) throws HibernateException {
-                NativeQuery query = session.createNativeQuery(sql);
-                for (int i = 0; i < args.length; i++) {
-                    query.setParameter(i + 1, args[i]);
-                }
-                return (T) query.uniqueResult();
+        return getHibernateTemplate().execute(session -> {
+            NativeQuery<T> query = session.createNativeQuery(sql);
+            for (int i = 0; i < args.length; i++) {
+                query.setParameter(i + 1, args[i]);
             }
+            AddScalar.addScalar(query, expectType);
+            return query.uniqueResult();
         });
     }
 
     @Override
     public Object topResultSql(final String sql, final Object... args) {
-        return callback(new HibernateCallback<Object>() {
-            @Override
-            public Object doInHibernate(Session session) throws HibernateException {
-                Query sqlQuery = session.createNativeQuery(sql);
-                sqlQuery.setMaxResults(1);
-                if (args != null) {
-                    for (int i = 0; i < args.length; i++) {
-                        sqlQuery.setParameter(i + 1, args[i]);
-                    }
+        return callback(session -> {
+            NativeQuery sqlQuery = session.createNativeQuery(sql);
+            sqlQuery.setMaxResults(1);
+            if (args != null) {
+                for (int i = 0; i < args.length; i++) {
+                    sqlQuery.setParameter(i + 1, args[i]);
                 }
-                return sqlQuery.uniqueResult();
             }
+            return sqlQuery.uniqueResult();
         });
     }
 
     @Override
-    public <T> List<T> topResultSql(Class<T> clazz, final int top, final String sql, final Object... args) {
-        return callback(new HibernateCallback<List<T>>() {
-            @SuppressWarnings("unchecked")
-            @Override
-            public List<T> doInHibernate(Session session) throws HibernateException {
-                NativeQuery sqlQuery = session.createNativeQuery(sql);
-                sqlQuery.setMaxResults(top);
-                if (args != null) {
-                    for (int i = 0; i < args.length; i++) {
-                        sqlQuery.setParameter(i + 1, args[i]);
-                    }
+    public <T> T topResultSql(Class<T> expectType, final String sql, final Object... args) {
+        return callback(session -> {
+            NativeQuery<T> query = session.createNativeQuery(sql);
+            query.setMaxResults(1);
+            if (args != null) {
+                for (int i = 0; i < args.length; i++) {
+                    query.setParameter(i + 1, args[i]);
                 }
-                return sqlQuery.list();
             }
+            AddScalar.addScalar(query, expectType);
+            return query.uniqueResult();
         });
     }
 
     @Override
-    public <T> T topResultSql(Class<T> clazz, final String sql, final Object... args) {
-        return callback(new HibernateCallback<T>() {
-            @SuppressWarnings("unchecked")
-            @Override
-            public T doInHibernate(Session session) throws HibernateException {
-                NativeQuery sqlQuery = session.createNativeQuery(sql);
-                sqlQuery.setMaxResults(1);
-                if (args != null) {
-                    for (int i = 0; i < args.length; i++) {
-                        sqlQuery.setParameter(i + 1, args[i]);
-                    }
+    public <T> List<T> topResultSql(Class<T> expectType, final int top, final String sql, final Object... args) {
+        return callback((HibernateCallback<List<T>>) session -> {
+            NativeQuery query = session.createNativeQuery(sql);
+            query.setMaxResults(top);
+            if (args != null) {
+                for (int i = 0; i < args.length; i++) {
+                    query.setParameter(i + 1, args[i]);
                 }
-                return (T) sqlQuery.uniqueResult();
             }
+            AddScalar.addScalar(query, expectType);
+            return query.list();
         });
     }
 
     @Override
     public int updateSql(final String sql, final Object... args) {
-        return callback(new HibernateCallback<Integer>() {
-            @Override
-            public Integer doInHibernate(Session session) throws HibernateException {
-                Query query = session.createNativeQuery(sql);
-                for (int i = 0; args != null && i < args.length; i++) {
-                    query.setParameter(i + 1, args[i]);
-                }
-                return query.executeUpdate();
+        return callback(session -> {
+            NativeQuery query = session.createNativeQuery(sql);
+            for (int i = 0; args != null && i < args.length; i++) {
+                query.setParameter(i + 1, args[i]);
             }
+            return query.executeUpdate();
         });
     }
 
@@ -231,7 +202,6 @@ public class GenericDAOHibernate extends HibernateDaoSupport implements GenericD
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public <T> T uniqueResultHql(Class<T> expectType, String hql, Object... args) {
         logger.debug("HQL unique query, expectType:{}, hql:[{}], args count:{}.", expectType.getName(), hql, args.length);
@@ -247,55 +217,44 @@ public class GenericDAOHibernate extends HibernateDaoSupport implements GenericD
 
     @Override
     public Object topResultHql(final String hql, final Object... args) {
-        return callback(new HibernateCallback<Object>() {
-            @Override
-            public Object doInHibernate(Session session) throws HibernateException {
-                Query query = session.createQuery(hql);
-                query.setMaxResults(1);
-                if (args != null) {
-                    for (int i = 0; i < args.length; i++) {
-                        query.setParameter(i, args[i]);
-                    }
+        return callback(session -> {
+            Query query = session.createQuery(hql);
+            query.setMaxResults(1);
+            if (args != null) {
+                for (int i = 0; i < args.length; i++) {
+                    query.setParameter(i, args[i]);
                 }
-                return query.uniqueResult();
             }
+            return query.uniqueResult();
         });
     }
 
 
     @Override
     public <T> T topResultHql(Class<T> clazz, final String hql, final Object... args) {
-        return callback(new HibernateCallback<T>() {
-            @SuppressWarnings("unchecked")
-            @Override
-            public T doInHibernate(Session session) throws HibernateException {
-                Query query = session.createQuery(hql);
-                query.setMaxResults(1);
-                if (args != null) {
-                    for (int i = 0; i < args.length; i++) {
-                        query.setParameter(i, args[i]);
-                    }
+        return callback(session -> {
+            Query query = session.createQuery(hql);
+            query.setMaxResults(1);
+            if (args != null) {
+                for (int i = 0; i < args.length; i++) {
+                    query.setParameter(i, args[i]);
                 }
-                return (T) query.uniqueResult();
             }
+            return (T) query.uniqueResult();
         });
     }
 
     @Override
     public <T> List<T> topResultHql(Class<T> clazz, final int top, final String hql, final Object... args) {
-        return callback(new HibernateCallback<List<T>>() {
-            @SuppressWarnings("unchecked")
-            @Override
-            public List<T> doInHibernate(Session session) throws HibernateException {
-                Query query = session.createQuery(hql);
-                query.setMaxResults(top);
-                if (args != null) {
-                    for (int i = 0; i < args.length; i++) {
-                        query.setParameter(i, args[i]);
-                    }
+        return callback((HibernateCallback<List<T>>) session -> {
+            Query query = session.createQuery(hql);
+            query.setMaxResults(top);
+            if (args != null) {
+                for (int i = 0; i < args.length; i++) {
+                    query.setParameter(i, args[i]);
                 }
-                return query.list();
             }
+            return query.list();
         });
     }
 
@@ -306,7 +265,6 @@ public class GenericDAOHibernate extends HibernateDaoSupport implements GenericD
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public <T> Iterator<T> iterate(Class<T> clazz, final String hql, final Object... args) {
         return (Iterator<T>) getHibernateTemplate().iterate(hql, args);
     }
@@ -328,7 +286,7 @@ public class GenericDAOHibernate extends HibernateDaoSupport implements GenericD
     }
 
     @Override
-    public <T extends Serializable> Pager<T> page(final Pager<T> pager) {
+    public <T extends Serializable> Pager<T> page(final Pager<T> pager, Class<T> clazz) {
         final QueryBuilder queryBuilder = pager.getQuery();
         if (HqlQueryBuilder.class.isAssignableFrom(queryBuilder.getClass())) {
             HqlQuery query = ((HqlQueryBuilder) queryBuilder).buildHqlQuery();
@@ -344,52 +302,45 @@ public class GenericDAOHibernate extends HibernateDaoSupport implements GenericD
             for (int i = 0; i < parameters.length; i++) {
                 hibernateQuery.setParameter(i, parameters[i]);
             }
-            @SuppressWarnings("unchecked")
             List<T> results = hibernateQuery.list();
 
             pager.setResults(results);
             pager.setCount((int) count);
             return pager;
         } else if (CriteriaQueryBuilder.class.isAssignableFrom(queryBuilder.getClass())) {
-            return getHibernateTemplate().execute(new HibernateCallback<Pager<T>>() {
-                @Override
-                public Pager<T> doInHibernate(Session session) throws HibernateException {
-                    Criteria criteria = ((CriteriaQueryBuilder) queryBuilder).buildCriteria(session);
-                    Criteria criteria2 = ((CriteriaQueryBuilder) queryBuilder).buildCriteria(session);
-                    criteria.setFirstResult(pager.getPageSize() * pager.getCurrentPage());
-                    criteria.setMaxResults(pager.getPageSize());
-                    @SuppressWarnings("unchecked")
-                    List<T> results = criteria.list();
+            return getHibernateTemplate().execute(session -> {
+                Criteria criteria = ((CriteriaQueryBuilder) queryBuilder).buildCriteria(session);
+                Criteria criteria2 = ((CriteriaQueryBuilder) queryBuilder).buildCriteria(session);
+                criteria.setFirstResult(pager.getPageSize() * pager.getCurrentPage());
+                criteria.setMaxResults(pager.getPageSize());
+                List<T> results = criteria.list();
 
-                    criteria2.setProjection(Projections.rowCount());
-                    long count = (Long) criteria2.uniqueResult();
+                criteria2.setProjection(Projections.rowCount());
+                long count = (Long) criteria2.uniqueResult();
 
-                    pager.setResults(results);
-                    pager.setCount((int) count);
-                    return pager;
-                }
+                pager.setResults(results);
+                pager.setCount((int) count);
+                return pager;
             });
         } else if (SqlQueryBuilder.class.isAssignableFrom(queryBuilder.getClass())) {
             final SqlQueryBuilder.SqlQuery query = ((SqlQueryBuilder) queryBuilder).buildSqlQuery();
-            return getHibernateTemplate().execute(new HibernateCallback<Pager<T>>() {
-                @Override
-                public Pager<T> doInHibernate(Session session) throws HibernateException {
-                    Query sql = session.createNativeQuery(query.getSql());
-                    Query sqlCount = session.createNativeQuery(query.getSqlCount());
-                    Object[] parameters = query.getQueryParameter();
-                    for (int i = 0; i < parameters.length; i++) {
-                        sql.setParameter(i + 1, parameters[i]);
-                        sqlCount.setParameter(i + 1, parameters[i]);
-                    }
-                    long count = ((Number) sqlCount.uniqueResult()).longValue();
-                    sql.setMaxResults(pager.getPageSize());
-                    sql.setFirstResult(pager.getPageSize() * pager.getCurrentPage());
-                    @SuppressWarnings("unchecked")
-                    List<T> results = sql.list();
-                    pager.setCount((int) count);
-                    pager.setResults(results);
-                    return pager;
+            return getHibernateTemplate().execute(session -> {
+                NativeQuery sql = session.createNativeQuery(query.getSql());
+                NativeQuery sqlCount = session.createNativeQuery(query.getSqlCount());
+                Object[] parameters = query.getQueryParameter();
+                for (int i = 0; i < parameters.length; i++) {
+                    sql.setParameter(i + 1, parameters[i]);
+                    sqlCount.setParameter(i + 1, parameters[i]);
                 }
+                long count = ((Number) sqlCount.uniqueResult()).longValue();
+                sql.setMaxResults(pager.getPageSize());
+                sql.setFirstResult(pager.getPageSize() * pager.getCurrentPage());
+
+                AddScalar.addScalar(sql, clazz);
+                List<T> results = sql.list();
+                pager.setCount((int) count);
+                pager.setResults(results);
+                return pager;
             });
 
 

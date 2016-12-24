@@ -72,9 +72,9 @@ public class GenericDAOHibernateStatics extends GenericDAOHibernate {
     }
 
     @Override
-    public <T extends Serializable> Pager<T> page(Pager<T> pager) {
+    public <T extends Serializable> Pager<T> page(Pager<T> pager, Class<T> clazz) {
         long start = System.currentTimeMillis();
-        Pager<T> result = super.page(pager);
+        Pager<T> result = super.page(pager, clazz);
         statistics.pageCost(pager.getQuery() == null ? "" : pager.getQuery().getClass().getName(), System.currentTimeMillis() - start);
         return result;
     }

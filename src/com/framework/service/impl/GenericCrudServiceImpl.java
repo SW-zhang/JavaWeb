@@ -197,17 +197,14 @@ public class GenericCrudServiceImpl implements GenericCrudService {
     @Override
     public <T extends Serializable> void pager(Class clazz, Pager<T> pager, Map<String, Object> params, List<Sort> orders) {
         Assert.notNull(pager);
-        pager.setQuery(new HqlQueryBuilder() {
-            @Override
-            public HqlQuery buildHqlQuery() {
-                Object[] param = null;
-                StringBuilder hql = new StringBuilder(" from " + clazz.getName());
-                param = assembleSql(hql, params, null, orders);
-                String hql2 = hql.toString();
-                return new HqlQuery(hql2, "select count(*) " + hql2, param);
-            }
+        pager.setQuery((HqlQueryBuilder) () -> {
+            Object[] param = null;
+            StringBuilder hql = new StringBuilder(" from " + clazz.getName());
+            param = assembleSql(hql, params, null, orders);
+            String hql2 = hql.toString();
+            return new HqlQueryBuilder.HqlQuery(hql2, "select count(*) " + hql2, param);
         });
-        genericDAO.page(pager);
+        genericDAO.page(pager, null);
     }
 
     /**
@@ -218,16 +215,11 @@ public class GenericCrudServiceImpl implements GenericCrudService {
      * @param params 参数
      */
     @Override
-    public <T extends Serializable> void hqlPager(Pager<T> pager, String hql, Object[] params) {
+    public <T extends Serializable> void hqlPager(Pager<T> pager, String hql, Object... params) {
         Assert.notNull(pager);
         Assert.hasLength(hql);
-        pager.setQuery(new HqlQueryBuilder() {
-            @Override
-            public HqlQuery buildHqlQuery() {
-                return new HqlQuery(hql, "select count(*) " + hql.substring(hql.indexOf("from"), hql.length()), params);
-            }
-        });
-        genericDAO.page(pager);
+        pager.setQuery((HqlQueryBuilder) () -> new HqlQueryBuilder.HqlQuery(hql, "select count(*) " + hql.substring(hql.indexOf("from"), hql.length()), params));
+        genericDAO.page(pager, null);
     }
 
     /**
@@ -238,17 +230,24 @@ public class GenericCrudServiceImpl implements GenericCrudService {
      * @param params 参数
      */
     @Override
-    public <T extends Serializable> void sqlPager(Pager<T> pager, String sql, Object[] params) {
+    public <T extends Serializable> void sqlPager(Pager<T> pager, String sql, Object... params) {
+        sqlPager(pager, null, sql, params);
+    }
+
+    /**
+     * 分页查询  sql
+     *
+     * @param pager  分页对象
+     * @param clazz  分页对象类型
+     * @param sql    sql语句
+     * @param params 参数
+     */
+    @Override
+    public <T extends Serializable> void sqlPager(Pager<T> pager, Class<T> clazz, String sql, Object... params) {
         Assert.notNull(pager);
         Assert.hasLength(sql);
-        pager.setQuery(new SqlQueryBuilder() {
-
-            @Override
-            public SqlQuery buildSqlQuery() {
-                return new SqlQuery(sql, "select count(*) " + sql.substring(sql.indexOf("from"), sql.length()), params);
-            }
-        });
-        genericDAO.page(pager);
+        pager.setQuery((SqlQueryBuilder) () -> new SqlQueryBuilder.SqlQuery(sql, "select count(*) " + sql.substring(sql.indexOf("from"), sql.length()), params));
+        genericDAO.page(pager, clazz);
     }
 
     /**

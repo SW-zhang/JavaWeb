@@ -28,6 +28,7 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-databind:2.8.5'
     compile 'org.apache.commons:commons-lang3:3.5'
     compile 'cglib:cglib:3.2.4'
+//    compile 'com.google.guava:guava:21.0-rc1'
 
     compile 'mysql:mysql-connector-java:6.0.5'
     compile 'commons-dbcp:commons-dbcp:1.4'

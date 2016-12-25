@@ -305,6 +305,9 @@ public interface GenericCrudService {
     @Transactional(propagation = Propagation.SUPPORTS)
     public <T extends Serializable> void hqlPager(Pager<T> pager, String hql, Object[] params);
 
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public <T extends Serializable> List<T> hqlPager(String hql, Integer page_index, Integer page_size, Object[] params);
+
     /**
      * 分页查询  sql
      *
@@ -315,6 +318,9 @@ public interface GenericCrudService {
      */
     @Transactional(propagation = Propagation.SUPPORTS)
     public <T extends Serializable> void sqlPager(Pager<T> pager, String sql, Object[] params);
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public <T extends Serializable> List<T> sqlPager(String sql, Integer page_index, Integer page_size, Object[] params);
 
     /**
      * 分页查询  sql
@@ -327,4 +333,7 @@ public interface GenericCrudService {
      */
     @Transactional(propagation = Propagation.SUPPORTS)
     public <T extends Serializable> void sqlPager(Pager<T> pager, Class<T> clazz, String sql, Object[] params);
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public <T extends Serializable> List<T> sqlPager(Class<T> clazz, String sql, Integer page_index, Integer page_size, Object[] params);
 }

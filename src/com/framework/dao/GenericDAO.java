@@ -1,6 +1,7 @@
 package com.framework.dao;
 
 import com.framework.bean.BaseEntity;
+import com.framework.dao.query.QueryBuilder;
 import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.orm.hibernate5.HibernateCallback;
 
@@ -25,6 +26,8 @@ public interface GenericDAO {
     public <E extends BaseEntity<E, ID>, ID extends Serializable> long count(Class<E> clazz);
 
     public <T extends Serializable> Pager<T> page(Pager<T> pager, Class<T> clazz);
+
+    public <T extends Serializable> List<T> page(Class<T> clazz, QueryBuilder queryBuilder, Integer page_index, Integer page_size);
 
     public List<?> hql(String hql, Object... args);
 

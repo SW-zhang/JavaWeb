@@ -222,6 +222,14 @@ public class GenericCrudServiceImpl implements GenericCrudService {
         genericDAO.page(pager, null);
     }
 
+    @Override
+    public <T extends Serializable> List<T> hqlPager(String hql, Integer page_index, Integer page_size, Object... params) {
+        Assert.hasLength(hql);
+        return genericDAO.page(null,
+                (HqlQueryBuilder) () -> new HqlQueryBuilder.HqlQuery(hql, "select count(*) " + hql.substring(hql.indexOf("from"), hql.length()), params),
+                page_index, page_size);
+    }
+
     /**
      * 分页查询  sql
      *
@@ -232,6 +240,11 @@ public class GenericCrudServiceImpl implements GenericCrudService {
     @Override
     public <T extends Serializable> void sqlPager(Pager<T> pager, String sql, Object... params) {
         sqlPager(pager, null, sql, params);
+    }
+
+    @Override
+    public <T extends Serializable> List<T> sqlPager(String sql, Integer page_index, Integer page_size, Object... params) {
+        return sqlPager(null, sql, page_index, page_size, params);
     }
 
     /**
@@ -248,6 +261,21 @@ public class GenericCrudServiceImpl implements GenericCrudService {
         Assert.hasLength(sql);
         pager.setQuery((SqlQueryBuilder) () -> new SqlQueryBuilder.SqlQuery(sql, "select count(*) " + sql.substring(sql.indexOf("from"), sql.length()), params));
         genericDAO.page(pager, clazz);
+    }
+
+    /**
+     * 分页查询  sql
+     *
+     * @param clazz  结果对象类型
+     * @param sql    sql语句
+     * @param params 参数
+     */
+    @Override
+    public <T extends Serializable> List<T> sqlPager(Class<T> clazz, String sql, Integer page_index, Integer page_size, Object... params) {
+        Assert.hasLength(sql);
+        return genericDAO.page(clazz,
+                (SqlQueryBuilder) () -> new SqlQueryBuilder.SqlQuery(sql, "select count(*) " + sql.substring(sql.indexOf("from"), sql.length()), params),
+                page_index, page_size);
     }
 
     /**

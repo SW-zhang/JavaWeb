@@ -348,4 +348,44 @@ public class GenericDAOHibernate extends HibernateDaoSupport implements GenericD
             throw new IllegalArgumentException("Query Class not supported, Pager.getQuery.getClass():" + queryBuilder.getClass());
         }
     }
+
+    @Override
+    public <T extends Serializable> List<T> page(Class<T> clazz, QueryBuilder queryBuilder, Integer page_index, Integer page_size) {
+        if (HqlQueryBuilder.class.isAssignableFrom(queryBuilder.getClass())) {
+            HqlQuery query = ((HqlQueryBuilder) queryBuilder).buildHqlQuery();
+            String hql = query.getHql();
+            Object[] parameters = query.getQueryParameter();
+
+            Query hibernateQuery = currentSession().createQuery(hql);
+            hibernateQuery.setFirstResult(page_index * page_size);
+            hibernateQuery.setMaxResults(page_size);
+            for (int i = 0; i < parameters.length; i++) {
+                hibernateQuery.setParameter(i, parameters[i]);
+            }
+            return hibernateQuery.list();
+
+        } else if (CriteriaQueryBuilder.class.isAssignableFrom(queryBuilder.getClass())) {
+            Criteria criteria = ((CriteriaQueryBuilder) queryBuilder).buildCriteria(currentSession());
+            criteria.setFirstResult(page_index * page_size);
+            criteria.setMaxResults(page_size);
+
+            return criteria.list();
+
+        } else if (SqlQueryBuilder.class.isAssignableFrom(queryBuilder.getClass())) {
+            final SqlQueryBuilder.SqlQuery query = ((SqlQueryBuilder) queryBuilder).buildSqlQuery();
+            NativeQuery sql = currentSession().createNativeQuery(query.getSql());
+            Object[] parameters = query.getQueryParameter();
+            for (int i = 0; i < parameters.length; i++) {
+                sql.setParameter(i + 1, parameters[i]);
+            }
+            sql.setMaxResults(page_size);
+            sql.setFirstResult(page_size * page_index);
+
+            AddScalar.addScalar(sql, clazz);
+
+            return sql.list();
+        } else {
+            throw new IllegalArgumentException("Query Class not supported, Query.getClass():" + queryBuilder.getClass());
+        }
+    }
 }

@@ -55,7 +55,7 @@
             </props>
         </property>
         <property name="physicalNamingStrategy">
-            <bean class="com.framework.namestrategy.ImprovedNamingStrategy"/>
+            <bean class="com.framework.dao.hibernate.ImprovedNamingStrategy"/>
         </property>
         <property name="packagesToScan">
             <list>

@@ -20,7 +20,7 @@ public class Demo implements BaseEntity<Demo, SimpleLongID> {
     private Integer level; // 级别
     private String path; // 功能路径
     private Integer status; // 状态 0：不可用 1：可用
-    private Date create_time; // 创建时间
+    private Date createTime; // 创建时间
 
     public Demo() {
         this.id = new SimpleLongID();
@@ -70,12 +70,12 @@ public class Demo implements BaseEntity<Demo, SimpleLongID> {
         this.status = status;
     }
 
-    public Date getCreate_time() {
-        return create_time;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setCreate_time(Date create_time) {
-        this.create_time = create_time;
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
     @EmbeddedId
@@ -101,7 +101,7 @@ public class Demo implements BaseEntity<Demo, SimpleLongID> {
         if (level != null ? !level.equals(function.level) : function.level != null) return false;
         if (path != null ? !path.equals(function.path) : function.path != null) return false;
         if (status != null ? !status.equals(function.status) : function.status != null) return false;
-        return !(create_time != null ? !create_time.equals(function.create_time) : function.create_time != null);
+        return !(createTime != null ? !createTime.equals(function.createTime) : function.createTime != null);
 
     }
 
@@ -113,7 +113,7 @@ public class Demo implements BaseEntity<Demo, SimpleLongID> {
         result = 31 * result + (level != null ? level.hashCode() : 0);
         result = 31 * result + (path != null ? path.hashCode() : 0);
         result = 31 * result + (status != null ? status.hashCode() : 0);
-        result = 31 * result + (create_time != null ? create_time.hashCode() : 0);
+        result = 31 * result + (createTime != null ? createTime.hashCode() : 0);
         return result;
     }
 
@@ -126,7 +126,7 @@ public class Demo implements BaseEntity<Demo, SimpleLongID> {
                 ", level=" + level +
                 ", path='" + path + '\'' +
                 ", status=" + status +
-                ", create_time=" + create_time +
+                ", createTime=" + createTime +
                 '}';
     }
 }

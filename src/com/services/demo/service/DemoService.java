@@ -12,16 +12,17 @@ import java.util.Date;
 /**
  * Created by wang on 2016/12/22.
  */
-@Transactional(rollbackFor = {Exception.class, RuntimeException.class})
+@Transactional(readOnly = true)
 @Service
 public class DemoService {
 
     @Autowired
     private GenericCrudService crudService;
 
-    public void add(Demo function) throws Exception {
+    @Transactional
+    public void add(Demo function) {
         function.setId(new SimpleLongID());
-        function.setCreate_time(new Date());
+        function.setCreateTime(new Date());
         function.setName("测试444");
         function.setPath("#####");
         crudService.saveOrUpdate(function);

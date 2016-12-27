@@ -1,4 +1,4 @@
-package com.wang.demo.model;
+package com.services.demo.model;
 
 import com.framework.bean.BaseEntity;
 import com.framework.bean.SimpleLongID;

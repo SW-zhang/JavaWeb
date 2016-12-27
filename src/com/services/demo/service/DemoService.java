@@ -1,8 +1,8 @@
-package com.wang.demo.service;
+package com.services.demo.service;
 
 import com.framework.bean.SimpleLongID;
 import com.framework.service.GenericCrudService;
-import com.wang.demo.model.Demo;
+import com.services.demo.model.Demo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,7 +12,7 @@ import java.util.Date;
 /**
  * Created by wang on 2016/12/22.
  */
-@Transactional(rollbackFor={Exception.class})
+@Transactional(rollbackFor = {Exception.class, RuntimeException.class})
 @Service
 public class DemoService {
 

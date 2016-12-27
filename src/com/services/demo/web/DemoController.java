@@ -1,10 +1,10 @@
-package com.wang.demo.web;
+package com.services.demo.web;
 
 import com.framework.bean.SimpleLongID;
 import com.framework.response.AjaxResult;
 import com.framework.service.GenericCrudService;
-import com.wang.demo.model.Demo;
-import com.wang.demo.service.DemoService;
+import com.services.demo.model.Demo;
+import com.services.demo.service.DemoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;

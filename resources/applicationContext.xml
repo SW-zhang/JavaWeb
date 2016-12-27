@@ -56,7 +56,7 @@
         </property>
         <property name="packagesToScan">
             <list>
-                <value>com</value>
+                <value>com.services</value>
             </list>
         </property>
     </bean>

@@ -196,7 +196,7 @@ public class GenericCrudServiceImpl implements GenericCrudService {
      */
     @Override
     public <T extends Serializable> void pager(Class clazz, Pager<T> pager, Map<String, Object> params, List<Sort> orders) {
-        Assert.notNull(pager);
+        Assert.notNull(pager, "pager must be not null");
         pager.setQuery((HqlQueryBuilder) () -> {
             Object[] param = null;
             StringBuilder hql = new StringBuilder(" from " + clazz.getName());
@@ -216,15 +216,15 @@ public class GenericCrudServiceImpl implements GenericCrudService {
      */
     @Override
     public <T extends Serializable> void hqlPager(Pager<T> pager, String hql, Object... params) {
-        Assert.notNull(pager);
-        Assert.hasLength(hql);
+        Assert.notNull(pager, "pager must be not null");
+        Assert.hasLength(hql, "hql length must be gt 0");
         pager.setQuery((HqlQueryBuilder) () -> new HqlQueryBuilder.HqlQuery(hql, "select count(*) " + hql.substring(hql.indexOf("from"), hql.length()), params));
         genericDAO.page(pager, null);
     }
 
     @Override
     public <T extends Serializable> List<T> hqlPager(String hql, Integer page_index, Integer page_size, Object... params) {
-        Assert.hasLength(hql);
+        Assert.hasLength(hql, "hql length must be gt 0");
         return genericDAO.page(null,
                 (HqlQueryBuilder) () -> new HqlQueryBuilder.HqlQuery(hql, "select count(*) " + hql.substring(hql.indexOf("from"), hql.length()), params),
                 page_index, page_size);
@@ -257,8 +257,8 @@ public class GenericCrudServiceImpl implements GenericCrudService {
      */
     @Override
     public <T extends Serializable> void sqlPager(Pager<T> pager, Class<T> clazz, String sql, Object... params) {
-        Assert.notNull(pager);
-        Assert.hasLength(sql);
+        Assert.notNull(pager, "pager must be not null");
+        Assert.hasLength(sql, "sql length must be gt 0");
         pager.setQuery((SqlQueryBuilder) () -> new SqlQueryBuilder.SqlQuery(sql, "select count(*) " + sql.substring(sql.indexOf("from"), sql.length()), params));
         genericDAO.page(pager, clazz);
     }
@@ -272,7 +272,7 @@ public class GenericCrudServiceImpl implements GenericCrudService {
      */
     @Override
     public <T extends Serializable> List<T> sqlPager(Class<T> clazz, String sql, Integer page_index, Integer page_size, Object... params) {
-        Assert.hasLength(sql);
+        Assert.hasLength(sql, "sql length must be gt 0");
         return genericDAO.page(clazz,
                 (SqlQueryBuilder) () -> new SqlQueryBuilder.SqlQuery(sql, "select count(*) " + sql.substring(sql.indexOf("from"), sql.length()), params),
                 page_index, page_size);

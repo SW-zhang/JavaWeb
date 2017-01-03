@@ -21,7 +21,6 @@ dependencies {
     compile 'org.slf4j:slf4j-api:1.+'
 //    compile 'log4j:log4j:1.2.9'
     compile 'junit:junit:4.9'
-
     compile 'javax.transaction:jta:1.1'
 
     compile 'com.alibaba:fastjson:1.2.17'

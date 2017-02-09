@@ -16,6 +16,16 @@
         </param-value>
     </context-param>
 
+   <!-- <listener>
+        <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+    </listener>-->
+    <listener>
+        <listener-class>com.framework.listener.ContextLoaderListener</listener-class>
+    </listener>
+    <!-- Session Counter -->
+    <listener>
+        <listener-class>com.framework.listener.SessionCounterListener</listener-class>
+    </listener>
 
     <!--<filter>
         <filter-name>SpringOpenSessionInViewFilter</filter-name>
@@ -61,11 +71,9 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
-
-    <listener>
-        <listener-class>com.framework.listener.ContextLoaderListener</listener-class>
-    </listener>
-
+    <session-config>
+        <session-timeout>30</session-timeout>
+    </session-config>
 
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>

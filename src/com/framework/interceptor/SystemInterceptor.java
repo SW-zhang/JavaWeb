@@ -23,6 +23,11 @@ public class SystemInterceptor extends HandlerInterceptorAdapter {
 
         System.out.println("you can do something");
 
+//        if (request.getSession().getAttribute("user") == null) {
+//            response.sendRedirect(request.getContextPath() + "/index");
+//            return false;
+//        }
+
         return super.preHandle(request, response, handler);
     }
 

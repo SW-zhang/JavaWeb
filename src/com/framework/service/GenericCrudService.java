@@ -34,7 +34,7 @@ public interface GenericCrudService {
     /**
      * 按ID取数据库条目.
      * <p>
-     * eg: select * from TABLE where SimpleLongID = :id
+     * eg: select * from TABLE where UnionID = :id
      *
      * @param <E>   EntityBean类型泛参
      * @param <ID>  EntityBean ID类型泛参
@@ -71,7 +71,7 @@ public interface GenericCrudService {
     /**
      * 更新数据库条目.
      * <p>
-     * eg: update TABLE set (col1=val1,col2=val2....) where SimpleLongID = :entity.id
+     * eg: update TABLE set (col1=val1,col2=val2....) where UnionID = :entity.id
      * 注意此更新操作为按条目主键更新.
      *
      * @param <E>    EntityBean类型泛参

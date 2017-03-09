@@ -1,22 +1,18 @@
 package com.framework.bean;
 
-import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
 
-public class SimpleLongID implements Serializable {
+@MappedSuperclass
+public class ID implements Serializable {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    public SimpleLongID() {
-    }
-
-    public SimpleLongID(Long id) {
-        this.id = id;
-    }
-
-    @Column(name = "id", nullable = false)
     public Long getId() {
         return id;
     }
@@ -30,7 +26,7 @@ public class SimpleLongID implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        SimpleLongID id1 = (SimpleLongID) o;
+        ID id1 = (ID) o;
 
         return !(id != null ? !id.equals(id1.id) : id1.id != null);
 
@@ -43,7 +39,7 @@ public class SimpleLongID implements Serializable {
 
     @Override
     public String toString() {
-        return "SimpleLongID{" +
+        return "ID{" +
                 "id=" + id +
                 '}';
     }

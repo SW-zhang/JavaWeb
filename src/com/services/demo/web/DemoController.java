@@ -1,6 +1,5 @@
 package com.services.demo.web;
 
-import com.framework.bean.SimpleLongID;
 import com.framework.response.AjaxResult;
 import com.framework.service.GenericCrudService;
 import com.services.demo.model.Demo;
@@ -26,7 +25,7 @@ public class DemoController {
 
     @RequestMapping(value = "/list")
     @ResponseBody
-    public AjaxResult list(Demo function, WebRequest request) {
+    public AjaxResult list() {
         List<Demo> result = crudService.list(Demo.class);
         return AjaxResult.successObject(result);
     }
@@ -34,7 +33,7 @@ public class DemoController {
     @RequestMapping(value = "/detail/{id}")
     @ResponseBody
     public AjaxResult detail(@PathVariable Long id) {
-        Demo demo = crudService.get(Demo.class, new SimpleLongID(id));
+        Demo demo = crudService.get(Demo.class, id);
         return AjaxResult.successObject(demo);
     }
 

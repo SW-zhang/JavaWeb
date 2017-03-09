@@ -1,19 +1,16 @@
 package com.services.demo.model;
 
 import com.framework.bean.BaseEntity;
-import com.framework.bean.SimpleLongID;
+import com.framework.bean.ID;
 
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.util.Date;
 
 @Entity
-@Table(name = "function")
-public class Demo implements BaseEntity<Demo, SimpleLongID> {
+@Table(name = "demo")
+public class Demo extends ID implements BaseEntity<Demo, Long> {
     private static final long serialVersionUID = 1L;
-
-    private SimpleLongID id;
 
     private String name; // 功能模块名称
     private Long parent_id; // 父功能模块id
@@ -21,14 +18,6 @@ public class Demo implements BaseEntity<Demo, SimpleLongID> {
     private String path; // 功能路径
     private Integer status; // 状态 0：不可用 1：可用
     private Date createTime; // 创建时间
-
-    public Demo() {
-        this.id = new SimpleLongID();
-    }
-
-    public Demo(SimpleLongID id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -78,37 +67,25 @@ public class Demo implements BaseEntity<Demo, SimpleLongID> {
         this.createTime = createTime;
     }
 
-    @EmbeddedId
-    public SimpleLongID getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(SimpleLongID id) {
-        this.id = id;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Demo function = (Demo) o;
+        Demo demo = (Demo) o;
 
-        if (id != null ? !id.equals(function.id) : function.id != null) return false;
-        if (name != null ? !name.equals(function.name) : function.name != null) return false;
-        if (parent_id != null ? !parent_id.equals(function.parent_id) : function.parent_id != null) return false;
-        if (level != null ? !level.equals(function.level) : function.level != null) return false;
-        if (path != null ? !path.equals(function.path) : function.path != null) return false;
-        if (status != null ? !status.equals(function.status) : function.status != null) return false;
-        return !(createTime != null ? !createTime.equals(function.createTime) : function.createTime != null);
+        if (name != null ? !name.equals(demo.name) : demo.name != null) return false;
+        if (parent_id != null ? !parent_id.equals(demo.parent_id) : demo.parent_id != null) return false;
+        if (level != null ? !level.equals(demo.level) : demo.level != null) return false;
+        if (path != null ? !path.equals(demo.path) : demo.path != null) return false;
+        if (status != null ? !status.equals(demo.status) : demo.status != null) return false;
+        return !(createTime != null ? !createTime.equals(demo.createTime) : demo.createTime != null);
 
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
+        int result = name != null ? name.hashCode() : 0;
         result = 31 * result + (parent_id != null ? parent_id.hashCode() : 0);
         result = 31 * result + (level != null ? level.hashCode() : 0);
         result = 31 * result + (path != null ? path.hashCode() : 0);
@@ -117,16 +94,16 @@ public class Demo implements BaseEntity<Demo, SimpleLongID> {
         return result;
     }
 
+
     @Override
     public String toString() {
         return "Demo{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
+                "name='" + name + '\'' +
                 ", parent_id=" + parent_id +
                 ", level=" + level +
                 ", path='" + path + '\'' +
                 ", status=" + status +
                 ", createTime=" + createTime +
-                '}';
+                "} " + super.toString();
     }
 }

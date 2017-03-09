@@ -1,6 +1,5 @@
 package com.services.demo.service;
 
-import com.framework.bean.SimpleLongID;
 import com.framework.service.GenericCrudService;
 import com.services.demo.model.Demo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +19,10 @@ public class DemoService {
     private GenericCrudService crudService;
 
     @Transactional
-    public void add(Demo function) {
-        function.setId(new SimpleLongID());
-        function.setCreateTime(new Date());
-        function.setName("测试444");
-        function.setPath("#####");
-        crudService.saveOrUpdate(function);
+    public void add(Demo demo) {
+        demo.setCreateTime(new Date());
+        demo.setName("测试444");
+        demo.setPath("#####");
+        crudService.saveOrUpdate(demo);
     }
 }

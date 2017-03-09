@@ -55,7 +55,7 @@ public class GenericDaoStatistics {
         classCost.cost(cost);
     }
 
-    // E get(Class<E> clazz, SimpleLongID id)
+    // E get(Class<E> clazz, UnionID id)
     private GenericDaoStatistics.Cost getCost = new Cost();
     private Map<Class, GenericDaoStatistics.Cost> get = new HashMap<Class, GenericDaoStatistics.Cost>();
 
@@ -83,7 +83,7 @@ public class GenericDaoStatistics {
         classCost.cost(cost);
     }
 
-    // SimpleLongID save(E entity)
+    // UnionID save(E entity)
     private GenericDaoStatistics.Cost saveCost = new Cost();
     private Map<Class, GenericDaoStatistics.Cost> save = new HashMap<Class, GenericDaoStatistics.Cost>();
 

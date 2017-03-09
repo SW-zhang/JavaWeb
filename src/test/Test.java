@@ -11,6 +11,7 @@ public class Test {
         ApplicationContext context = new FileSystemXmlApplicationContext("classpath:/applicationContext.xml");
         DemoService action = (DemoService) context.getBean("demoService");
         action.add(new Demo());
+
     }
 
 }

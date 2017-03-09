@@ -44,9 +44,9 @@ dependencies {
     compile 'org.springframework:spring-orm:4.3.4.RELEASE'
     compile 'org.springframework:spring-web:4.3.4.RELEASE'
     compile 'org.springframework:spring-webmvc:4.3.4.RELEASE'
+    compile 'org.springframework:spring-aspects:4.3.4.RELEASE'
 
 //    compile 'org.springframework:spring-asm:4.3.4.RELEASE'
-//    compile 'org.springframework:spring-aspects:4.3.4.RELEASE'
 //    compile 'org.springframework:spring-test:4.3.4.RELEASE'
 //    compile 'org.springframework:spring-webmvc-portlet:4.3.4.RELEASE'
 //    compile 'org.springframework:spring-oxm:4.3.4.RELEASE'

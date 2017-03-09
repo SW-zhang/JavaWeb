@@ -3,13 +3,17 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
 	http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
 	http://www.springframework.org/schema/tx 
 	http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
     http://www.springframework.org/schema/context 
     http://www.springframework.org/schema/context/spring-context-4.3.xsd
-    ">
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <aop:aspectj-autoproxy/>
 
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
@@ -48,7 +52,7 @@
                 <prop key="hibernate.format_sql">${hibernate.format_sql}</prop>
                 <prop key="hibernate.use_sql_comments">${hibernate.use_sql_comments}</prop>
                 <!-- 自动建表类型 validate|create|create-drop|update -->
-                <prop key="hibernate.hbm2ddl.auto">validate</prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
                 <prop key="hibernate.current_session_context_class">
                     org.springframework.orm.hibernate5.SpringSessionContext
                 </prop>

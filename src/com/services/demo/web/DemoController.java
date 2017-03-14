@@ -1,5 +1,6 @@
 package com.services.demo.web;
 
+import com.framework.dao.Pager;
 import com.framework.response.AjaxResult;
 import com.framework.service.GenericCrudService;
 import com.services.demo.model.Demo;
@@ -28,6 +29,16 @@ public class DemoController {
     public AjaxResult list() {
         List<Demo> result = crudService.list(Demo.class);
         return AjaxResult.successObject(result);
+    }
+
+    @RequestMapping(value = "/list_page")
+    public ModelAndView list(WebRequest request,Demo param, final Pager<Demo> pager) {
+        crudService.hqlPager(pager, "from Demo", new Object[]{});
+        ModelAndView view = new ModelAndView();
+        view.setViewName("/demo/pager_demo");
+        view.addObject("pageParam", request.getParameterMap());
+        view.addObject("pager", pager);
+        return view;
     }
 
     @RequestMapping(value = "/detail/{id}")

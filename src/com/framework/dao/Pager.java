@@ -25,7 +25,7 @@ public class Pager<T extends Serializable> implements Serializable {
 
     public Pager() {
         this.currentPage = 0;
-        this.pageSize = 20;
+        this.pageSize = 10;
     }
 
     public Pager(int currentPage, int pageSize) {

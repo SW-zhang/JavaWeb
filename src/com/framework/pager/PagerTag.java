@@ -27,7 +27,7 @@ public class PagerTag extends TagSupport {
 		StringBuffer uri = new StringBuffer();
 		JspWriter out = pageContext.getOut();
 		try {
-			uri.append("<div class=\"pagination\"><ul>");
+			uri.append("<div class=\"_pagination\"><ul>");
 			if (totalPage >= 1) {
 				uri.append(this.getPrevPage());
 				if(totalPage<=10){
@@ -74,15 +74,11 @@ public class PagerTag extends TagSupport {
 		 return super.doStartTag();
 	}
 	private void initFullUrl(){
-		HttpServletRequest httpServletRequest = (HttpServletRequest) pageContext.getRequest();
-		String requestUrl = httpServletRequest.getRequestURL().toString();
-		String contextPath = httpServletRequest.getContextPath();
-		requestUrl = requestUrl.split(contextPath)[0];
-		fullUrl = requestUrl+contextPath+url;
+		fullUrl = url;
 		StringBuffer paramBuffer = new StringBuffer(); 
 		if (params!=null&&!params.isEmpty()) {
 			for(String paramName : params.keySet()){
-				if("page".equals(paramName)){
+				if("currentPage".equals(paramName)){
 					continue;
 				}
 				if("pageSize".equals(paramName)){
@@ -102,9 +98,9 @@ public class PagerTag extends TagSupport {
 		}
 		
 		if (fullUrl.indexOf("?") < 0) {
-			fullUrl = fullUrl + "?" + (pageSize==10?"":("rows=" + pageSize + "&") ) + "page=";
+			fullUrl = fullUrl + "?" + "currentPage=";
 		} else {
-			fullUrl = fullUrl + (pageSize==10?"":("rows=" + pageSize + "&") ) + "page=";
+			fullUrl = fullUrl + "currentPage=";
 		}
 	}
 	private String getPageLink(int targetPageNo) {
@@ -112,7 +108,7 @@ public class PagerTag extends TagSupport {
 			return "<li class=\"active\"><span>" + (targetPageNo+1) + "</span></li>";
 		}else{
 			if(isAjax()){
-				return "<li><a href=\"" + fullUrl + targetPageNo + "\" onclick=\""+ajaxFn+"("+targetPageNo+");return false;\" >" + (targetPageNo+1) + "</a></li>";
+				return "<li><a href=\"" + fullUrl + (curPage+1) + "\" onclick=\""+ajaxFn+"("+targetPageNo+");return false;\" >" + (targetPageNo+1) + "</a></li>";
 			}else{
 				return "<li><a href=\"" + fullUrl + targetPageNo + "\" >" + (targetPageNo+1) + "</a></li>";
 			}
@@ -124,7 +120,7 @@ public class PagerTag extends TagSupport {
 			return "<li class=\"disabled\"><span>&lt;</span></li>";
 		} else {
 			if(isAjax()){
-				return "<li><a href=\"" + fullUrl + (curPage-1) + "\" onclick=\""+ajaxFn+"("+(curPage-1)+");return false;\" >&lt;</a></li>";
+				return "<li><a href=\"" + fullUrl + (curPage+1) + "\" onclick=\""+ajaxFn+"("+(curPage-1)+");return false;\" >&lt;</a></li>";
 			}else{
 				return "<li><a href=\"" + fullUrl + (curPage-1) + "\" >&lt;</a></li>";  
 			}

@@ -19,7 +19,7 @@ public class AddScalar {
      * @param query
      * @param clazz
      */
-        public static void addScalar(NativeQuery query, Class clazz) {
+    public static void addScalar(NativeQuery query, Class clazz) {
         if (clazz != null && !AddScalar.isBaseType(clazz)) {
             if (isEntity(clazz)) {
                 query.addEntity(clazz);

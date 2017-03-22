@@ -29,6 +29,7 @@ dependencies {
 //    compile 'com.netflix.feign:feign-jackson:8.18.0'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.8.5'
     compile 'org.apache.commons:commons-lang3:3.5'
+    compile 'apache-beanutils:commons-beanutils:1.7.0'
     compile 'cglib:cglib:3.2.4'
 //    compile 'com.google.guava:guava:21.0-rc1'
 
@@ -53,6 +54,12 @@ dependencies {
 
     compile 'org.hibernate:hibernate-core:5.2.6.Final'
 //    compile 'org.hibernate:hibernate-ehcache:5.2.6.Final'
+
+    //发送邮件
+    compile 'javax.mail:javax.mail-api:1.5.6'
+    compile 'javax.mail:mail:1.4.7'
+    compile 'org.freemarker:freemarker:2.3.23'
+
 
     compile 'javax.servlet:jstl:1.2'
     providedCompile 'javax.servlet.jsp:javax.servlet.jsp-api:2.3.1'

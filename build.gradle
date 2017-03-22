@@ -30,6 +30,7 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-databind:2.8.5'
     compile 'org.apache.commons:commons-lang3:3.5'
     compile 'apache-beanutils:commons-beanutils:1.7.0'
+    compile 'commons-io:commons-io:2.5'
     compile 'cglib:cglib:3.2.4'
 //    compile 'com.google.guava:guava:21.0-rc1'
 

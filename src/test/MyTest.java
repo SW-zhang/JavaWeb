@@ -1,6 +1,5 @@
 package test;
 
-import com.alibaba.fastjson.JSON;
 import com.services.demo.model.Demo;
 import com.services.demo.service.DemoService;
 import org.junit.Test;
@@ -22,8 +21,8 @@ public class MyTest {
     }
 
     @Test
-    public void listTest(){
-        for (Demo demo : demoService.findAll()){
+    public void listTest() {
+        for (Demo demo : demoService.findAll()) {
             System.out.println(demo.getCreateTime());
         }
     }

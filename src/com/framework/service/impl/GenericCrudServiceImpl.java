@@ -170,7 +170,7 @@ public class GenericCrudServiceImpl implements GenericCrudService {
      * @param params 条件
      */
     @Override
-    public <T extends Serializable> void pager(Class clazz, Pager<T> pager, Map<String, Object> params) {
+    public <T extends Serializable> void pager(Class<T> clazz, Pager<T> pager, Map<String, Object> params) {
         pager(clazz, pager, params, null);
     }
 
@@ -182,7 +182,7 @@ public class GenericCrudServiceImpl implements GenericCrudService {
      * @param orders 排序字段
      */
     @Override
-    public <T extends Serializable> void pager(Class clazz, Pager<T> pager, List<Sort> orders) {
+    public <T extends Serializable> void pager(Class<T> clazz, Pager<T> pager, List<Sort> orders) {
         pager(clazz, pager, null, orders);
     }
 
@@ -195,7 +195,7 @@ public class GenericCrudServiceImpl implements GenericCrudService {
      * @param orders 排序字段
      */
     @Override
-    public <T extends Serializable> void pager(Class clazz, Pager<T> pager, Map<String, Object> params, List<Sort> orders) {
+    public <T extends Serializable> void pager(Class<T> clazz, Pager<T> pager, Map<String, Object> params, List<Sort> orders) {
         Assert.notNull(pager, "pager must be not null");
         pager.setQuery((HqlQueryBuilder) () -> {
             Object[] param = null;

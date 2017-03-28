@@ -269,7 +269,7 @@ public interface GenericCrudService {
      * @param <T>
      */
     @Transactional(propagation = Propagation.SUPPORTS)
-    public <T extends Serializable> void pager(Class clazz, Pager<T> pager, Map<String, Object> params);
+    public <T extends Serializable> void pager(Class<T> clazz, Pager<T> pager, Map<String, Object> params);
 
     /**
      * 分页查询
@@ -281,7 +281,7 @@ public interface GenericCrudService {
      * @param <T>
      */
     @Transactional(propagation = Propagation.SUPPORTS)
-    public <T extends Serializable> void pager(Class clazz, Pager<T> pager, Map<String, Object> params, List<Sort> orders);
+    public <T extends Serializable> void pager(Class<T> clazz, Pager<T> pager, Map<String, Object> params, List<Sort> orders);
 
     /**
      * 分页查询
@@ -292,7 +292,7 @@ public interface GenericCrudService {
      * @param <T>
      */
     @Transactional(propagation = Propagation.SUPPORTS)
-    public <T extends Serializable> void pager(Class clazz, Pager<T> pager, List<Sort> orders);
+    public <T extends Serializable> void pager(Class<T> clazz, Pager<T> pager, List<Sort> orders);
 
     /**
      * 分页查询 hql

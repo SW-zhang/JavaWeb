@@ -25,6 +25,8 @@ dependencies {
     compile 'junit:junit:4.12'
     compile 'javax.transaction:jta:1.1'
 
+    compile 'com.thoughtworks.xstream:xstream:1.4.9'
+
     compile 'com.alibaba:fastjson:1.2.17'
 //    compile 'com.netflix.feign:feign-jackson:8.18.0'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.8.5'
@@ -48,6 +50,7 @@ dependencies {
     compile 'org.springframework:spring-webmvc:4.3.4.RELEASE'
     compile 'org.springframework:spring-aspects:4.3.4.RELEASE'
     compile 'org.springframework:spring-test:4.3.4.RELEASE'
+    compile 'org.springframework:spring-oxm:4.3.4.RELEASE'
 
 //    compile 'org.springframework:spring-asm:4.3.4.RELEASE'
 //    compile 'org.springframework:spring-webmvc-portlet:4.3.4.RELEASE'

@@ -12,7 +12,7 @@ repositories {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-version ''
+version '1.0.0'
 group 'JavaWeb'
 
 dependencies {
@@ -28,13 +28,11 @@ dependencies {
     compile 'com.thoughtworks.xstream:xstream:1.4.9'
 
     compile 'com.alibaba:fastjson:1.2.17'
-//    compile 'com.netflix.feign:feign-jackson:8.18.0'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.8.5'
     compile 'org.apache.commons:commons-lang3:3.5'
     compile 'apache-beanutils:commons-beanutils:1.7.0'
     compile 'commons-io:commons-io:2.5'
     compile 'cglib:cglib:3.2.4'
-//    compile 'com.google.guava:guava:21.0-rc1'
 
     compile 'mysql:mysql-connector-java:6.0.5'
     compile 'commons-dbcp:commons-dbcp:1.4'
@@ -53,8 +51,6 @@ dependencies {
     compile 'org.springframework:spring-oxm:4.3.4.RELEASE'
 
 //    compile 'org.springframework:spring-asm:4.3.4.RELEASE'
-//    compile 'org.springframework:spring-webmvc-portlet:4.3.4.RELEASE'
-//    compile 'org.springframework:spring-oxm:4.3.4.RELEASE'
 
     compile 'org.hibernate:hibernate-core:5.2.6.Final'
 //    compile 'org.hibernate:hibernate-ehcache:5.2.6.Final'

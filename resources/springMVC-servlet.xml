@@ -32,7 +32,13 @@
             <bean class="com.framework.interceptor.SystemInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>
-
+    <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+        <property name="converters">
+            <list>
+                <bean class="com.framework.interceptor.DateConverter" />
+            </list>
+        </property>
+    </bean>
     <bean id="viewResolver" class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
         <property name="contentNegotiationManager" ref="cnManager"/>
         <property name="viewResolvers">

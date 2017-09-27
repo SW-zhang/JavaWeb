@@ -15,6 +15,9 @@ import org.springframework.stereotype.Component;
  **/
 
 /**
+ * 切面配置Controller时需要让SpringMVC-servlet.xml 扫描到本类，并且配置<aop:aspectj-autoproxy proxy-target-class="true" />
+ * 切面配置Service时需要让applicationContext.xml 扫描到本类，并且配置<aop:aspectj-autoproxy />
+ * <p>
  * execution表达式含义：
  * 例： execution (* com.services..*Service*.*(..))
  * 第一个 * 表示返回值为任意类型

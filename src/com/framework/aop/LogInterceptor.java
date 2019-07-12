@@ -1,13 +1,16 @@
 package com.framework.aop;
 
 import com.alibaba.fastjson.JSON;
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author wang
@@ -53,4 +56,33 @@ public class LogInterceptor {
         return returnValue;
     }
 
+    @Before("execution (* com.services..*Service*.*(..))")
+    public void beforMethod(JoinPoint point) {
+        String methodName = point.getSignature().getName();
+        List<Object> args = Arrays.asList(point.getArgs());
+        System.out.println("调用前连接点方法为：" + methodName + ",参数为：" + args);
+    }
+
+    @After("execution (* com.services..*Service*.*(..))")
+    public void afterMethod(JoinPoint point) {
+        String methodName = point.getSignature().getName();
+        List<Object> args = Arrays.asList(point.getArgs());
+        System.out.println("调用后连接点方法为：" + methodName + ",参数为：" + args);
+    }
+
+    /*通过returning属性指定连接点方法返回的结果放置在result变量中，在返回通知方法中可以从result变量中获取连接点方法的返回结果了。*/
+    @AfterReturning(value = "execution (* com.services..*Service*.*(..))", returning = "result")
+    public void afterReturning(JoinPoint point, Object result) {
+        String methodName = point.getSignature().getName();
+        List<Object> args = Arrays.asList(point.getArgs());
+        System.out.println("连接点方法为：" + methodName + ",参数为：" + args + ",目标方法执行结果为：" + result);
+    }
+
+    /*通过throwing属性指定连接点方法出现异常信息存储在ex变量中，在异常通知方法中就可以从ex变量中获取异常信息了*/
+    @AfterThrowing(value = "execution (* com.services..*Service*.*(..))", throwing = "ex")
+    public void afterThrowing(JoinPoint point, Exception ex) {
+        String methodName = point.getSignature().getName();
+        List<Object> args = Arrays.asList(point.getArgs());
+        System.out.println("连接点方法为：" + methodName + ",参数为：" + args + ",异常为：" + ex);
+    }
 }
